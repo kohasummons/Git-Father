@@ -32,7 +32,7 @@ const getUser = () => {
         <button class="c-button" @click="getUser">Seek</button>
       </div>
     </header>
-    <TheLoader v-if="data.isLoading" />
+    <TheLoader v-if="data.isLoading" showIcon style="margin-top: 8rem" />
     <section v-if="!data.foundUser" class="c-section c-section-ux">
       <div class="c-section__inner">
         <h3>
@@ -43,7 +43,19 @@ const getUser = () => {
     </section>
     <section v-else class="c-section">
       <div class="c-card__header">
-        <div class="c-card__image" style="background-color: black"></div>
+        <div
+          class="c-card__image"
+          style="position: relative; background-color: black"
+        >
+          <TheLoader
+            style="
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            "
+          />
+        </div>
         <div class="c-card__details">
           <div class="c-card__user">
             <h2 class="c-name">Joshua Omobola</h2>
@@ -52,7 +64,7 @@ const getUser = () => {
           <div class="c-stats">
             <span>42 repos</span>
             <span>6 stars</span>
-            <span>2x a gemini</span>
+            <span>Gemini</span>
           </div>
         </div>
       </div>
@@ -82,6 +94,7 @@ header {
   display: flex;
   align-items: center;
   margin-left: auto;
+  border-radius: 0.25em;
   background-color: var(--color-background-soft);
 }
 
@@ -108,6 +121,7 @@ header {
   cursor: pointer;
   font-weight: 600;
   color: var(--color-text);
+  border-radius: calc(0.25em / 2);
   background-color: #363635;
 }
 
@@ -130,6 +144,7 @@ header {
 
 /* Card */
 .c-card__header {
+  border-radius: 0.75rem;
   background-color: #689033;
   padding: 1rem;
   display: flex;
@@ -138,6 +153,7 @@ header {
 .c-card__image {
   width: 200px;
   height: 200px;
+  border-radius: calc(0.75em / 2);
 }
 
 .c-card__details {
@@ -147,7 +163,8 @@ header {
   flex-direction: column;
 }
 
-.c-card__user {}
+.c-card__user {
+}
 
 .c-name {
   font-size: 3.5rem;
@@ -161,14 +178,14 @@ header {
 }
 
 .c-stats {
-  font-size: 1rem;
-  padding-top: 60px;
+  font-size: 1.5rem;
+  padding-top: 40px;
   /* border: 1px solid red; */
 }
 
 .c-stats > * {
-  border: 2px solid blue;
-  margin-right: 4px;
+  margin-right: 0.75em;
+  letter-spacing: -1.15px;
 }
 
 .c-father {
@@ -183,6 +200,6 @@ header {
 }
 
 .c-father > p .c-login {
-  color: red;
+  color: rgb(207, 154, 20);
 }
 </style>

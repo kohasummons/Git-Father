@@ -1,9 +1,12 @@
 <script setup>
 import SearchIcon from "./icons/IconLoader.vue";
+defineProps({
+  showIcon: Boolean,
+});
 </script>
 <template>
   <div class="c-loader__container">
-    <SearchIcon class="c-icon" />
+    <SearchIcon :class="{ isVisible: showIcon }" class="c-icon" />
     <div class="c-loader"></div>
   </div>
 </template>
@@ -12,10 +15,10 @@ import SearchIcon from "./icons/IconLoader.vue";
   display: flex;
   position: relative;
   justify-content: center;
-  margin-top: 12rem;
 }
 
 .c-icon {
+  display: none;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -29,6 +32,10 @@ import SearchIcon from "./icons/IconLoader.vue";
   border-radius: 50%;
   border-left-color: transparent;
   animation: spin 1s forwards infinite;
+}
+
+.isVisible {
+  display: block;
 }
 
 @keyframes spin {
