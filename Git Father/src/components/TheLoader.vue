@@ -1,14 +1,24 @@
-<script setup></script>
+<script setup>
+import SearchIcon from "./icons/IconLoader.vue";
+</script>
 <template>
   <div class="c-loader__container">
+    <SearchIcon class="c-icon" />
     <div class="c-loader"></div>
   </div>
 </template>
 <style scoped>
 .c-loader__container {
   display: flex;
+  position: relative;
   justify-content: center;
   margin-top: 12rem;
+}
+
+.c-icon {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .c-loader {
