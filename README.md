@@ -1,2 +1,2 @@
-# Git-Father
-The GIthub tale of Fury and Requests
+# Git Father
+The Github tale of Fury and Requests
