@@ -1,23 +1,100 @@
 <script setup>
-import { reactive } from "vue";
+import { reactive, computed, watch } from "vue";
 import ToolingIcon from "./components/icons/IconTooling.vue";
 import TheLoader from "./components/TheLoader.vue";
-import TestAxiosVue from "./components/TestAxios.vue";
+// import TestAxiosVue from "./components/TestAxios.vue";
+import axios from "axios";
+
+const JOKES_API =
+  "https://official-joke-api.appspot.com/jokes/programming/random";
+const RANDOM_WORD_API = "https://api.api-ninjas.com/v1/randomword";
 
 const data = reactive({
   isLoading: false,
-  userName: "",
-  foundUser: [],
+  userName: "iyki",
+  user: null,
+  joke: null,
+  hideImageLoader: false,
+  random1: null,
+  random2: null,
+  random3: null,
 });
 
-const getUser = () => {
-  data.isLoading = !data.isLoading;
+const firstName = computed(() => {
+  if (!data.user?.name) return data.user?.login;
+  return data.user?.name.split(" ")[0];
+});
+
+const fullName = computed(() => {
+  return data.user?.name || "You need a cool name";
+});
+
+const getJoke = async () => {
+  let { data: joke } = await axios.get(JOKES_API);
+  return joke;
+};
+
+const getRandomWord = async () => {
+  let randomword = await axios.get(RANDOM_WORD_API);
+  return randomword.data.word;
+};
+
+watch(
+  () => data.user,
+  async () => {
+    if (data.user.avatarUrl) {
+      setTimeout(() => (data.hideImageLoader = data.isLoading), 2000);
+    }
+    data.random1 = await getRandomWord();
+    data.random2 = await getRandomWord();
+    data.random3 = await getRandomWord();
+});
+
+const getUser = async () => {
+  if (data.userName == "") return;
+  data.isLoading = true;
+
+  const query = {
+    query: `
+        query {
+          user(login: "${data.userName}") {
+            name
+            login
+            bio
+            avatarUrl
+            status {
+              message
+            }
+            isFollowingViewer
+          }
+        }
+      `,
+  };
+  data.joke = await getJoke();
+
+  try {
+    let { data: foundUser } = await axios({
+      method: "POST",
+      url: "https://api.github.com/graphql",
+      headers: {
+        "content-type": "application/json",
+        Authorization: `bearer ${import.meta.env.VITE_GITHUB_TOKEN}`,
+      },
+      data: query,
+    });
+
+    data.user = foundUser.data.user;
+    data.isLoading = false;
+  } catch (error) {
+    data.isLoading = false;
+    data.showError = true;
+  }
 };
 </script>
 
 <template>
   <div class="c-main">
-    <TestAxiosVue />
+    <!-- <TestAxiosVue /> -->
     <header>
       <h1 class="c-logo">Git Father</h1>
       <div class="c-input__wrapper">
@@ -33,47 +110,43 @@ const getUser = () => {
       </div>
     </header>
     <TheLoader v-if="data.isLoading" showIcon style="margin-top: 8rem" />
-    <section v-if="!data.foundUser" class="c-section c-section-ux">
+    <section v-if="!data.user" class="c-section c-section-ux">
       <div class="c-section__inner">
         <h3>
-          Hey! Start by Entering your Github User Name and I will reveal some
-          Secrets
+          Hey! Start by Entering your Github User Name and I will tell you a
+          joke
         </h3>
       </div>
     </section>
-    <section v-else class="c-section">
+    <section v-show="!data.isLoading && data.user" class="c-section">
       <div class="c-card__header">
         <div
           class="c-card__image"
-          style="position: relative; background-color: black"
+          :style="{ 'background-image': 'url(' + data.user?.avatarUrl + ')' }"
         >
-          <TheLoader
-            style="
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            "
-          />
+          <TheLoader v-if="!data.hideImageLoader" class="loader" />
         </div>
         <div class="c-card__details">
           <div class="c-card__user">
-            <h2 class="c-name">Joshua Omobola</h2>
-            <p class="c-username">@kohasummons</p>
+            <h2 class="c-name">
+              {{ fullName }}
+            </h2>
+            <p class="c-username">@{{ data.user?.login }}</p>
           </div>
           <div class="c-stats">
-            <span>42 repos</span>
-            <span>6 stars</span>
-            <span>Gemini</span>
+            <span>{{ data.random1 }}</span>
+            <span>{{ data.random2 }}</span>
+            <span>{{ data.random3 }}</span>
           </div>
         </div>
       </div>
       <div class="c-father">
         <p>
-          <span class="c-login">@kanga</span>, Your neigther a fater akdfja
-          dkfjaldfj ajdkfa klsdfs sfklsdf sdlsdfs sfjsldfksf sdkflsjfdfsd
-          kfslfdksfj
+          <span class="c-login">{{ firstName }},</span>
         </p>
+
+        <p class="setup">{{ data.joke ? data.joke[0].setup : "" }}</p>
+        <p class="punchline">{{ data.joke ? data.joke[0].punchline : "" }}</p>
       </div>
     </section>
   </div>
@@ -145,7 +218,7 @@ header {
 /* Card */
 .c-card__header {
   border-radius: 0.75rem;
-  background-color: #689033;
+  background-color: #935e2d;
   padding: 1rem;
   display: flex;
 }
@@ -153,7 +226,10 @@ header {
 .c-card__image {
   width: 200px;
   height: 200px;
+  position: relative;
+  background-color: black;
   border-radius: calc(0.75em / 2);
+  background-size: contain;
 }
 
 .c-card__details {
@@ -200,6 +276,21 @@ header {
 }
 
 .c-father > p .c-login {
-  color: rgb(207, 154, 20);
+  color: rgb(202, 143, 24);
+}
+
+.loader {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.setup {
+  font-size: 10.95em;
+}
+
+.punchline {
+  font-size: 1.2em;
 }
 </style>
