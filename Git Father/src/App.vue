@@ -45,10 +45,8 @@ watch(
     if (data.user.avatarUrl) {
       setTimeout(() => (data.hideImageLoader = data.isLoading), 2000);
     }
-    data.random1 = await getRandomWord();
-    data.random2 = await getRandomWord();
-    data.random3 = await getRandomWord();
-});
+  }
+);
 
 const getUser = async () => {
   if (data.userName == "") return;
@@ -65,12 +63,16 @@ const getUser = async () => {
             status {
               message
             }
+            url
             isFollowingViewer
           }
         }
       `,
   };
   data.joke = await getJoke();
+  data.random1 = await getRandomWord();
+  data.random2 = await getRandomWord();
+  data.random3 = await getRandomWord();
 
   try {
     let { data: foundUser } = await axios({
@@ -120,16 +122,18 @@ const getUser = async () => {
     </section>
     <section v-show="!data.isLoading && data.user" class="c-section">
       <div class="c-card__header">
-        <div
-          class="c-card__image"
-          :style="{ 'background-image': 'url(' + data.user?.avatarUrl + ')' }"
-        >
-          <TheLoader v-if="!data.hideImageLoader" class="loader" />
+        <div class="c-card__image">
+          <img
+            class="c-image"
+            @load="data.hideImageLoader = true"
+            :src="data.user?.avatarUrl"
+          />
+          <TheLoader v-if="data.hideImageLoader" class="loader" />
         </div>
         <div class="c-card__details">
           <div class="c-card__user">
             <h2 class="c-name">
-              {{ fullName }}
+              <a :href="data.user?.url">{{ fullName }}</a>
             </h2>
             <p class="c-username">@{{ data.user?.login }}</p>
           </div>
@@ -142,7 +146,7 @@ const getUser = async () => {
       </div>
       <div class="c-father">
         <p>
-          <span class="c-login">{{ firstName }},</span>
+          <span class="c-login">Heyy {{ firstName }}, here's a treat 🤩</span>
         </p>
 
         <p class="setup">{{ data.joke ? data.joke[0].setup : "" }}</p>
@@ -232,6 +236,11 @@ header {
   background-size: contain;
 }
 
+.c-image {
+  width: 200px;
+  height: auto;
+}
+
 .c-card__details {
   padding-left: 2rem;
   padding-top: 1em;
@@ -247,6 +256,7 @@ header {
   letter-spacing: -4.5px;
   line-height: 1em;
 }
+
 .c-username {
   font-size: 1.75rem;
   font-weight: 300;
@@ -279,6 +289,10 @@ header {
   color: rgb(202, 143, 24);
 }
 
+.c-father p:first-of-type {
+  margin-bottom: 0.15em;
+}
+
 .loader {
   position: absolute;
   top: 50%;
@@ -286,11 +300,14 @@ header {
   transform: translate(-50%, -50%);
 }
 
-.setup {
-  font-size: 10.95em;
+.c-father .setup {
+  font-size: 3.25em;
+  text-align: left;
 }
 
-.punchline {
-  font-size: 1.2em;
+.c-father .punchline {
+  margin-top: 0.75em;
+  font-size: 1.75em;
+  opacity: 0.5;
 }
 </style>

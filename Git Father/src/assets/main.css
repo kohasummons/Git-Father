@@ -10,13 +10,13 @@
 
 a {
   text-decoration: none;
-  color: rgb(153, 208, 0);
   transition: 0.4s;
+  color: rgb(255, 241, 204);
 }
 
 @media (hover: hover) {
   a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+    letter-spacing: -5px;
   }
 }
 
