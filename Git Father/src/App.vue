@@ -153,6 +153,11 @@ const getUser = async () => {
         <p class="punchline">{{ data.joke ? data.joke[0].punchline : "" }}</p>
       </div>
     </section>
+    <footer>
+      <a href="https://github.com/kohasummons"
+        ><p class="c-author">Joshua Omobola</p></a
+      >
+    </footer>
   </div>
 </template>
 
@@ -163,6 +168,7 @@ header {
 }
 
 .c-logo {
+  font-size: 2.75em;
   letter-spacing: -1.5px;
 }
 
@@ -225,6 +231,7 @@ header {
   background-color: #935e2d;
   padding: 1rem;
   display: flex;
+  width: 100%;
 }
 
 .c-card__image {
@@ -239,6 +246,7 @@ header {
 .c-image {
   width: 200px;
   height: auto;
+  border-radius: calc(0.75em / 2);
 }
 
 .c-card__details {
@@ -246,9 +254,6 @@ header {
   padding-top: 1em;
   display: flex;
   flex-direction: column;
-}
-
-.c-card__user {
 }
 
 .c-name {
@@ -309,5 +314,76 @@ header {
   margin-top: 0.75em;
   font-size: 1.75em;
   opacity: 0.5;
+}
+
+footer {
+  margin-top: 6.5em;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-width: 900px) {
+  #app {
+    max-width: 100vw;
+  }
+
+  header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .c-logo {
+    margin-bottom: 0.75em;
+    letter-spacing: -2.5px;
+  }
+
+  .c-input__wrapper {
+    margin-left: unset;
+    width: 100%;
+  }
+
+  .c-input {
+    width: 100%;
+  }
+
+  .c-card__header {
+    margin-top: 4em;
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .c-card__image {
+    width: 500px;
+    max-width: 100%;
+    height: auto;
+  }
+
+  .c-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .c-stats {
+    flex-direction: column;
+  }
+
+  .c-stats > span {
+    display: inline-block;
+    font-size: 0.75em;
+  }
+
+  .c-card__details {
+    padding-left: unset;
+  }
+
+  .c-father p:first-of-type {
+    margin-bottom: 0.75em;
+    font-size: 1.5em;
+  }
+
+  .c-father .setup {
+    font-size: 2.25em;
+    line-height: 1;
+  }
 }
 </style>
