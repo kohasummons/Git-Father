@@ -4,6 +4,7 @@ import ToolingIcon from "./components/icons/IconTooling.vue";
 import TheLoader from "./components/TheLoader.vue";
 // import TestAxiosVue from "./components/TestAxios.vue";
 import axios from "axios";
+import yeehaw, { config } from "./utils/confetti";
 
 const JOKES_API =
   "https://official-joke-api.appspot.com/jokes/programming/random";
@@ -11,7 +12,7 @@ const RANDOM_WORD_API = "https://api.api-ninjas.com/v1/randomword";
 
 const data = reactive({
   isLoading: false,
-  userName: "iyki",
+  userName: "dabit3",
   user: null,
   joke: null,
   hideImageLoader: false,
@@ -38,15 +39,6 @@ const getRandomWord = async () => {
   let randomword = await axios.get(RANDOM_WORD_API);
   return randomword.data.word;
 };
-
-watch(
-  () => data.user,
-  async () => {
-    if (data.user.avatarUrl) {
-      setTimeout(() => (data.hideImageLoader = data.isLoading), 2000);
-    }
-  }
-);
 
 const getUser = async () => {
   if (data.userName == "") return;
@@ -87,6 +79,9 @@ const getUser = async () => {
 
     data.user = foundUser.data.user;
     data.isLoading = false;
+
+    await yeehaw.addConfetti(config);
+    yeehaw.clearCanvas();
   } catch (error) {
     data.isLoading = false;
     data.showError = true;
@@ -188,8 +183,8 @@ header {
   border: none;
   outline: none;
   background: none;
-  color: var(--color-text);
-  color: rgb(173, 215, 3);
+  color: var(--color-input);
+  /* color: rgb(58, 59, 53); */
   font-size: 1.2em;
 }
 
@@ -246,6 +241,7 @@ header {
 .c-image {
   width: 200px;
   height: auto;
+  object-fit: cover;
   border-radius: calc(0.75em / 2);
 }
 
