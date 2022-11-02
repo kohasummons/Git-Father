@@ -17,3 +17,7 @@ The Github tale of Fury and Requests — jokes too.
 - Fed Git Father with the Random Word Endpoint
 - Fed Git Father with the Jokes Endpoint
 - Explodes Confetti Nukes when you behave nicely
+
+## License
+
+MIT
